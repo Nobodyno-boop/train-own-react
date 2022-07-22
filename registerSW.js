@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/train-own-react/sw.js', { scope: '/train-own-react/' })})}
