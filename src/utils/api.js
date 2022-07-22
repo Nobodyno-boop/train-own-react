@@ -128,4 +128,4 @@ export const info = async (code, fn) =>
   rate(await _request(ENDPOINT + 'info', { code: code }), fn)
 
 export const create = async (link, fn) =>
-  rate(await _request(ENDPOINT + 'shorten', { url: link }), fn)
+  rate(await _request(ENDPOINT + 'shorten', { url: link }).catch(fn), fn)

@@ -6,13 +6,13 @@ export const Input = (props) => {
   const [url, setUrl] = useState('')
 
   const change = (e) => {
-    setUrl(e.target.value)
+    setUrl(e.target.value, false)
   }
 
   const click = async () => {
     await create(url(), (data) => {
       if (data?.error_code) {
-        console.log('HAndle error here')
+        useSignal.emit('alert:message', data.message)
       } else {
         useSignal.emit('link:add', data)
       }

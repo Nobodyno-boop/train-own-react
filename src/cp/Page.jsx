@@ -3,7 +3,7 @@ import { Links } from './Links'
 
 export const Page = (props, childs) => {
   return (
-    <div class="h-screen w-screen bg-gray-900 flex flex-col space-y-4 items-center justify-center">
+    <div class="min-h-screen min-w-screen bg-gradient-to-r from-gray-800 via-gray-900 to-black flex flex-col space-y-10 items-center ">
       {childs}
     </div>
   )

@@ -1,5 +1,3 @@
-import { Index } from './pages'
-
 // API https://shrtco.de/docs/
 
 // let l = await create(

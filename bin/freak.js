@@ -1,3 +1,10 @@
+/**
+ *  Small JSX Handler aka React
+ *
+ *
+ *  For fun based on https://stackoverflow.com/a/42405694 thanks to him
+ *
+ */
 class Freak {
   constructor(debug = true) {
     this.elements = []
@@ -16,6 +23,23 @@ class Freak {
 
   id() {
     return Math.random().toString(36).slice(2, 7)
+  }
+
+  group(name) {
+    if (this.debug) {
+      console.group(name)
+    }
+  }
+  groupEnd() {
+    if (this.debug) {
+      console.groupEnd()
+    }
+  }
+
+  log(...a) {
+    if (this.debug) {
+      console.log(...a)
+    }
   }
 
   el(tag, props, ...childs) {
@@ -39,7 +63,7 @@ class Freak {
     }
 
     if (typeof tag === 'function') {
-      console.group(tag.name)
+      this.group(tag.name)
       let frid = ''
       if (this.refreshMode) {
         if (props?.__frag) {
@@ -56,7 +80,7 @@ class Freak {
       this._frag = ''
       this.frags[tag.name] ?? (this.frags[tag.name] = [])
       this.frags[tag.name].push({ id: frid, tree: tree, _t: tag })
-      console.groupEnd()
+      this.groupEnd()
       return tree
     }
     this.currentId = ''
@@ -66,20 +90,21 @@ class Freak {
   render(tag, container) {
     this.container = container
     this.baseJsx = tag
-    console.group('start')
+    this.group('start')
     this.currentId = this.id()
     let tree = tag({})
 
     if (tree.childs.length === 0) {
       tree._t = jsx
     }
-    console.log(tree)
+
+    this.groupEnd()
+
+    this.log(tree)
 
     tree.childs.flat().map((x) => this.patchParent(x, tree.id))
     this.tree = tree
     let element = this.toElement(tree)
-
-    console.groupEnd()
 
     container.replaceChildren(element)
   }
@@ -96,11 +121,18 @@ class Freak {
 
   toElement(tree, parent) {
     if (typeof tree === 'object' && tree._n) {
-      let data = tree.data()
-      let fn = tree.fn(data)
-      let els = fn.map((x) => this.toElement(x))
+      let el = null
+      if (tree._n === 'useMap') {
+        let data = tree.data()
+        let fn = tree.fn(data)
+        el = fn.map((x) => this.toElement(x))
+      } else if (tree._n === 'useContext') {
+        let data = tree.data.map((x) => x())
+        let fn = tree.fn(...data)
+        el = this.toElement(fn)
+      }
 
-      return els
+      return el
     } else if (typeof tree.node === 'undefined') {
       return document.createTextNode(tree)
     }
@@ -188,35 +220,33 @@ class Freak {
     return this.tree.childs.find((x) => this._getParent(x, el, this.tree))
   }
 
-  setState(id, value) {
+  setState(id, value, refresh) {
     this.refreshMode = true
     let state = this.states.find((x) => x.id === id)
     if (state) {
       state.value = value
-      let tee = this.elements.find((x) => x.id === state.el)
+      if (refresh) {
+        let tee = this.elements.find((x) => x.id === state.el)
 
-      if (tee.frag !== '') {
-        let sp = tee.frag.split('#')
-        let p = this.frags[sp[0]]
-        if (p) {
-          let frag = p.find((x) => (x.id = sp[1]))
-          let el = this.elements.find((x) => x.id === frag.tree.id)
-          if (el) {
-            console.log(el)
-            let n = this.toElement(frag.tree)
-            console.log(n)
-            el.el.replaceChildren(n)
+        if (tee.frag !== '') {
+          let sp = tee.frag.split('#')
+          let p = this.frags[sp[0]]
+          if (p) {
+            let frag = p.find((x) => (x.id = sp[1]))
+            let el = this.elements.find((x) => x.id === frag.tree.id)
+            if (el) {
+              let n = this.toElement(frag.tree)
+              el.el.replaceChildren(n)
+            }
           }
+        } else {
+          let el = this.toElement(tee)
+          tee.el.replaceChildren(el)
         }
-      } else {
-        let el = this.toElement(tee)
-        tee.el.replaceChildren(el)
       }
     }
     this.refreshMode = false
   }
-
-  isInsideFrag(frag) {}
 }
 
 export const Fr = new Freak()

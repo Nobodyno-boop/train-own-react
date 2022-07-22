@@ -21,8 +21,7 @@ export const Links = () => {
 
   return (
     <div>
-      <button onClick={f}>add</button>
-      <div class="flex flex-col flex-2">
+      <div class="flex flex-auto flex-wrap content-between place-content-center	">
         {useMap(
           (link) =>
             link.map((x) => {

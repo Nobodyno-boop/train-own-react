@@ -1,5 +1,5 @@
-import '../style.css'
 import 'virtual:windi.css'
+import '../style.css'
 
 import { Fr } from '../bin/freak'
 import { Index } from './pages/Index'
