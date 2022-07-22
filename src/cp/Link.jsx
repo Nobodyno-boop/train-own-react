@@ -1,15 +1,13 @@
 import { useSignal } from '../utils/signal'
 
 export const Link = (props) => {
-  console.log(props)
   const h = () => {}
   const _copy = (url) => {
     navigator.clipboard.writeText(url).then(() => {
       useSignal.emit(
         'alert:message',
-        'Votre lien à été copier dans votre press papier'
+        'Votre lien a été copier dans votre presse-papier'
       )
-      console.log('Text copied to clipboard...')
     })
   }
   const copy1 = () => {

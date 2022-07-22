@@ -13,7 +13,7 @@ export const Index = (props) => {
         ShortU
       </h1>
       <div class="w-150 h-40 rounded bg-gray-900 text-white p-4 text-center flex flex-col drop-shadow-lg">
-        <div class="font-bold font-mono text-lg">Crée votre lien coupé !</div>
+        <div class="font-bold font-mono text-lg">Créé votre lien coupé !</div>
         <Input />
       </div>
       <div class="w-150 rounded bg-gray-900 text-white p-4 text-center flex flex-col drop-shadow-lg">

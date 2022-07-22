@@ -6,7 +6,7 @@
  *
  */
 class Freak {
-  constructor(debug = true) {
+  constructor(debug = false) {
     this.elements = []
     this.tree = []
     this.states = []
